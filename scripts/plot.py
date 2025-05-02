@@ -28,6 +28,6 @@ def summarize_diagnostics(history):
     plt.title("Évolution de la perte")
 
     
-    plt.savefig("../results/model/learn_and_loss_curves.png")
+    plt.savefig("./results/learn_and_loss_curves.png")
 
     plt.show()

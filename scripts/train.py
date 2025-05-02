@@ -123,11 +123,11 @@ def train(input_shape: tuple, output_class: np.uint8):
     
     # build model
     model = build_model(input_shape, output_class)
-    with open('./results/model/final_emotion_model_arch.txt', 'w') as f:
+    with open('./model/final_emotion_model_arch.txt', 'w') as f:
         model.summary(print_fn=lambda x: f.write(x + '\n'))
 
     # tensorboard for monitor the learning process
-    log_dir = "./results/model/logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    log_dir = "./results/logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
     # Early stopping for handle overfit
@@ -140,7 +140,7 @@ def train(input_shape: tuple, output_class: np.uint8):
     history = model.fit(it_train, validation_data=it_val, epochs=60, batch_size=100, callbacks=[tensorboard, early_stop, reduce_lr])
     
     # saving model
-    model.save("./results/model/final_emotion_model.keras")
+    model.save("./model/final_emotion_model.keras")
     
     # learning curves
     summarize_diagnostics(history)
