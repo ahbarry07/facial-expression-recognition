@@ -20,6 +20,7 @@ IMG_SIZE = 48  # CNN input size (48x48)
 # Load the trained CNN model
 model = keras.models.load_model('./model/final_emotion_model.keras')
 
+
 def preprocess_frame(face_img):
     """Preprocess a face image to match CNN input (48x48 grayscale)."""
 

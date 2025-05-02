@@ -14,11 +14,11 @@ import datetime
 from preprocess import process_pixels
 from plot import summarize_diagnostics
 
-
+# Constant
 TRAIN_PATH = "./data/train.csv"
+INPUT_SHAPE = (48, 48, 1)
+OUTPUT_CLASS = 7
 
-input_shape = (48, 48, 1)
-output_class = 7
 initial_learning_rate = 0.0001
 
 
@@ -147,4 +147,4 @@ def train(input_shape: tuple, output_class: np.uint8):
 
 
 if __name__ == "__main__":
-    train(input_shape, output_class)
+    train(INPUT_SHAPE, OUTPUT_CLASS)
