@@ -3,6 +3,7 @@ from tensorflow import keras
 import numpy as np
 import time
 import cv2
+from screeninfo import get_monitors
 
 from preprocess import preprocess_frame
 
@@ -142,11 +143,13 @@ def process_video_stream():
         cv2.error: If the webcam fails to initialize or read frames.
         ValueError: If the DNN or CNN model processing fails due to invalid input or configuration.
         AttributeError: If required global variables (e.g., `net`, `model`) are not defined.
+        ImportError: If `screeninfo` is not available for centering the video window.
 
     Notes:
         - The webcam is accessed with `cv2.VideoCapture(0)`; change the index if multiple cameras are present.
         - Faces are detected using `detect_faces_dnn` with a configurable confidence threshold.
         - Emotions are predicted using `predict_emotion` every second, with results cached for `FACE_CACHE_DURATION` seconds.
+        - The video window is centered on the screen using `screeninfo` to retrieve monitor dimensions.
         - The function displays the output in a window titled 'Video Stream' and exits with the 'q' key.
         - The frame dimensions are retrieved from the webcam properties for coordinate validation.
         - Error handling includes skipping invalid face predictions and stopping on frame read failures.
@@ -160,6 +163,20 @@ def process_video_stream():
     
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Get screen dimensions using screeninfo
+    monitor = get_monitors()[0]  # Use the primary monitor
+    screen_width = monitor.width
+    screen_height = monitor.height
+
+    # Calculate position to center the window
+    window_x = (screen_width - frame_width) // 2
+    window_y = (screen_height - frame_height) // 2
+
+    # Create the window and center it
+    window_name = 'Video Stream'
+    cv2.namedWindow(window_name)
+    cv2.moveWindow(window_name, window_x, window_y)
 
     last_prediction_time = time.time()
     last_faces = []  # Store last face coordinates [(x, y, w, h), ...]
@@ -223,7 +240,7 @@ def process_video_stream():
                         print(f"{current_time_str}s : Face {i+1} - {emotion} , {int(probabilities[i] * 100)}%")
 
         # Display the frame
-        cv2.imshow('Video Stream', frame)
+        cv2.imshow(window_name, frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
