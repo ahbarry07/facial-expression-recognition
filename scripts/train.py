@@ -22,9 +22,32 @@ OUTPUT_CLASS = 7
 initial_learning_rate = 0.0001
 
 
-# load train and test dataset
 def load_data(path: str):
-    """This fonction load data and return X and Y"""
+    """
+    Load training or test dataset from a CSV file and return features and labels.
+
+    This function reads a CSV file containing image pixel data and corresponding emotion labels,
+    extracting the pixel values and labels into separate arrays for further processing.
+
+    Args:
+        path (str): Path to the CSV file (e.g., './data/train.csv') containing columns 'pixels'
+                    and 'emotion'.
+
+    Returns:
+        tuple: A tuple (X, Y) where:
+            - X (pandas.Series): Series of pixel strings from the 'pixels' column.
+            - Y (pandas.Series): Series of integer labels from the 'emotion' column.
+
+    Raises:
+        FileNotFoundError: If the file at `path` does not exist.
+        pd.errors.EmptyDataError: If the CSV file is empty.
+        KeyError: If the required columns ('pixels', 'emotion') are missing from the CSV.
+
+    Notes:
+        - Requires `pandas` to be imported as `pd` in the global scope.
+        - Assumes the CSV has 'pixels' as a space-separated string of 2304 values (48x48)
+          and 'emotion' as integer labels (0 to 6).
+    """
     
     df = pd.read_csv(path)
     X, Y = df["pixels"], df["emotion"]
@@ -33,11 +56,33 @@ def load_data(path: str):
 
 
 
-# Build model
 def build_model(input_shape: tuple, output_class: np.uint8):
     """
     Builds and compiles a deep CNN for image classification.
-    Includes convolutional layers, batch normalization, pooling, dropout, and fully connected layers.
+
+    Constructs a Sequential CNN model with multiple convolutional layers, batch normalization,
+    max pooling, dropout for regularization, and fully connected layers. The model is compiled
+    with the Adam optimizer and categorical crossentropy loss for multi-class classification.
+
+    Args:
+        input_shape (tuple): Shape of the input images (e.g., (48, 48, 1) for 48x48 grayscale).
+        output_class (np.uint8): Number of output classes (e.g., 7 for 7 emotions).
+
+    Returns:
+        tensorflow.keras.Model: Compiled CNN model ready for training.
+
+    Raises:
+        ValueError: If `input_shape` is invalid or `output_class` is less than or equal to 0.
+        tf.errors.InvalidArgumentError: If the model architecture fails to compile due to
+                                        incompatible layer configurations.
+
+    Notes:
+        - Uses `Conv2D`, `BatchNormalization`, `MaxPool2D`, `Dropout`, `Flatten`, and `Dense`
+          layers from TensorFlow/Keras.
+        - Applies L2 regularization (0.01) to the last three convolutional layers.
+        - Dropout rates increase from 0.25 to 0.4 in deeper layers to prevent overfitting.
+        - Compiled with Adam optimizer (learning rate 0.0001) and 'categorical_crossentropy' loss.
+        - Requires `tensorflow.keras` layers and `Adam` optimizer to be imported.
     """
      
     model= Sequential()
@@ -85,12 +130,41 @@ def build_model(input_shape: tuple, output_class: np.uint8):
 
 
 
-#Train CNN
 def train(input_shape: tuple, output_class: np.uint8):
     """
     Trains the CNN model on the emotion dataset.
-    Includes data augmentation, early stopping, learning rate reduction, TensorBoard logging, 
-    and saves the trained model and training history plots.
+
+    Loads and preprocesses the training data, builds a CNN model, applies data augmentation,
+    and trains the model with early stopping, learning rate reduction, and TensorBoard logging.
+    Saves the trained model and generates diagnostic plots of training history.
+
+    Args:
+        input_shape (tuple): Shape of the input images (e.g., (48, 48, 1) for 48x48 grayscale).
+        output_class (np.uint8): Number of output classes (e.g., 7 for 7 emotions).
+
+    Returns:
+        None: The function saves the model and plots but does not return a value.
+
+    Raises:
+        FileNotFoundError: If the training data file at `TRAIN_PATH` or the save directories
+                          ('./model/', './results/') are inaccessible.
+        ValueError: If the data preprocessing or model training fails due to invalid shapes
+                    or configurations.
+        tf.errors.InvalidArgumentError: If the model compilation or training fails due to
+                                       incompatible data or model issues.
+        AttributeError: If required functions (`load_data`, `process_pixels`, `build_model`,
+                        `summarize_diagnostics`) or constants (`TRAIN_PATH`) are not defined.
+
+    Notes:
+        - Uses `ImageDataGenerator` for data augmentation with shifts, flips, and zooms.
+        - Implements `EarlyStopping` (patience=5) and `ReduceLROnPlateau` (factor=0.5, min_lr=1e-6)
+          to optimize training.
+        - Logs training with TensorBoard to './results/logs/fit/YYYYMMDD-HHMMSS'.
+        - Saves the model architecture to './model/final_emotion_model_arch.txt' and the model
+          to './model/final_emotion_model.keras'.
+        - Generates learning curves using `summarize_diagnostics` and saves them to
+          './results/learn_and_loss_curves.png'.
+        - Requires `tensorflow.keras`, `sklearn`, `pandas`, `numpy`, and `datetime` to be imported.
     """
 
     # load data
