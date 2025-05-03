@@ -95,7 +95,6 @@ def adversarial_attack(image, model, target_class_idx, emotion_labels, max_itera
     return adv_image_tensor.numpy().squeeze(axis=0).squeeze(axis=-1)
 
 
-
 def main():
     """Main function to perform adversarial attack on an image."""
 
