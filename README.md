@@ -75,6 +75,16 @@ facial-expression-recognition/
 5. **Prepare Input Data** (for adversarial attack):
    - Place a sample image (`happy.png`) in the `results/` directory.
 
+## 🎥 Demo
+
+Watch the demonstration of the facial expression recognition system in action:
+
+<video width="640" height="360" controls>
+  <source src="results/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
 ## Usage
 
 ### 1. Real-Time Emotion Detection
