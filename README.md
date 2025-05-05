@@ -79,7 +79,7 @@ facial-expression-recognition/
 
 Watch the demonstration of the facial expression recognition system in action:
 
-[![Watch the demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)]([https://www.youtube.com/watch?v=VIDEO_ID](https://youtu.be/kgeh7Br6ORo))
+[![Watch the demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)]([https://www.youtube.com/watch?v=kgeh7Br6ORo])
 
 Or download the video directly here: [demo.mp4](results/demo.mp4)
 
