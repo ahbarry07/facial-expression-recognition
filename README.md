@@ -79,10 +79,9 @@ facial-expression-recognition/
 
 Watch the demonstration of the facial expression recognition system in action:
 
-<video width="640" height="360" controls>
-  <source src="results/demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Watch the demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+
+Or download the video directly here: [demo.mp4](results/demo.mp4)
 
 
 ## Usage
